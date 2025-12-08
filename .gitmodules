@@ -1,15 +1,15 @@
 [submodule "beatmap-fetcher"]
 	path = beatmap-fetcher
-	url = ./beatmap-fetcher/
+	url = https://github.com/mirror-nekoha-moe/beatmap-fetcher.git
 [submodule "cookie-fetcher"]
 	path = cookie-fetcher
-	url = ./cookie-fetcher/
+	url = https://github.com/mirror-nekoha-moe/cookie-fetcher.git
 [submodule "mirror-database"]
 	path = mirror-database
-	url = ./mirror-database/
+	url = https://github.com/mirror-nekoha-moe/mirror-database.git
 [submodule "mirror-server"]
 	path = mirror-server
-	url = ./mirror-server/
+	url = https://github.com/mirror-nekoha-moe/mirror-server.git
 [submodule "mirror-website"]
 	path = mirror-website
-	url = ./mirror-website/
+	url = https://github.com/mirror-nekoha-moe/mirror-website.git
