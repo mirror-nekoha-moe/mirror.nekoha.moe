@@ -1,0 +1,6 @@
+/sftp-keys
+/monitoring
+/.env.*
+/users.*
+/checkFiles.sh
+!*.example
