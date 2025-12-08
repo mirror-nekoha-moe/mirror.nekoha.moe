@@ -1,0 +1,15 @@
+[submodule "beatmap-fetcher"]
+	path = beatmap-fetcher
+	url = ./beatmap-fetcher/
+[submodule "cookie-fetcher"]
+	path = cookie-fetcher
+	url = ./cookie-fetcher/
+[submodule "mirror-database"]
+	path = mirror-database
+	url = ./mirror-database/
+[submodule "mirror-server"]
+	path = mirror-server
+	url = ./mirror-server/
+[submodule "mirror-website"]
+	path = mirror-website
+	url = ./mirror-website/
