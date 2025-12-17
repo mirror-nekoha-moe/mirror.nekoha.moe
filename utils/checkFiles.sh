@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# PostgreSQL credentials
-DB_NAME=""
-DB_USER=""
-DB_HOST=""
+# Load .env file (PSQL Credentials)
+export $(grep -v '^#' ../.env.psql | xargs)
 
 # Base folder path
-BASE_PATH=""
+BASE_PATH="/home/admin/git/mirror.nekoha.moe/beatmap-fetcher/storage"
 
 # Counters
 checked_count=0
@@ -24,7 +22,7 @@ for id in $ids; do
             echo "Folder $id has no .osz files"
         fi
     else
-        echo "Folder $id does not exist"
+        echo "Folder $id does not exist (download disabled?)"
     fi
 done
 

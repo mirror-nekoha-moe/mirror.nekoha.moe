@@ -31,7 +31,7 @@ services:
     env_file:
       - ./beatmap-fetcher/src/.env.production
     volumes:
-      - ./beatmap-fetcher/storage:/app/storage:Z
+      - ./mirror-storage/storage:/app/storage:Z
       - osu-cookies:/app/src/cookies:Z
     networks:
       - mirror-network
@@ -71,7 +71,7 @@ services:
       - "30727:30727"
     volumes:
       - /run/user/${UID:-1000}/podman/podman.sock:/run/podman/podman.sock:ro
-      - ./beatmap-fetcher/storage:/app/storage:Z
+      - ./mirror-storage/storage:/app/storage:Z
     networks:
       - mirror-network
     extra_hosts:
@@ -203,8 +203,8 @@ services:
     restart: always
     volumes:
       # Shared directory on the host
-      - ./beatmap-fetcher/storage:/home/public/storage:ro
-      - ./beatmap-fetcher/storage:/home/railgun/storage
+      - ./mirror-storage/storage:/home/public/storage:ro
+      - ./mirror-storage/storage:/home/railgun/storage
       # Users configuration
       - ./users.conf:/etc/sftp/users.conf:ro
       # Persistent SSH keys
