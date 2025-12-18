@@ -13,3 +13,6 @@
 [submodule "mirror-website"]
 	path = mirror-website
 	url = https://github.com/mirror-nekoha-moe/mirror-website.git
+[submodule "mirror-storage"]
+	path = mirror-storage
+	url = https://github.com/mirror-nekoha-moe/mirror-storage.git
