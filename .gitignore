@@ -1,5 +1,5 @@
 /sftp-keys
-/monitoring
+/monitoring/grafana-datasources.yml
 /.env.*
 /users.*
 /checkFiles.sh
