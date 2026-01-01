@@ -1,0 +1,23 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://host.containers.internal:9090
+    isDefault: true
+    editable: true
+
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: host.containers.internal:5432
+    database: PG_DATABASE_HERE
+    user: PG_USERNAME_HERE
+    secureJsonData:
+      password: 'PG_PASSWORD_HERE'
+    jsonData:
+      sslmode: 'disable'
+      postgresVersion: 1600
+      timescaledb: false
+    editable: true
