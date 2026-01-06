@@ -41,7 +41,7 @@ if ! command -v podman-compose &> /dev/null; then
 else
     echo "podman-compose installed"
 fi
-de
+
 echo ""
 echo -e "${BLUE}[2/6] Enabling user lingering${NC}"
 loginctl enable-linger $USER
