@@ -16,3 +16,6 @@
 [submodule "mirror-storage"]
 	path = mirror-storage
 	url = https://github.com/mirror-nekoha-moe/mirror-storage.git
+[submodule "puppeteer-base"]
+	path = puppeteer-base
+	url = https://github.com/mirror-nekoha-moe/puppeteer-base.git
