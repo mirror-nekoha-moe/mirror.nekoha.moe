@@ -196,21 +196,25 @@ services:
     depends_on:
       - valkey
 
-  # FTP Server (read-only + write user)
-  sftp-server:
-    image: docker.io/atmoz/sftp
-    container_name: sftp-server
+  node-exporter:
+    image: docker.io/prom/node-exporter:latest
+    container_name: node-exporter
     restart: always
+    network_mode: host
+    pid: host
     volumes:
-      # Shared directory on the host
-      - ./mirror-storage/storage:/home/public/storage:ro
-      - ./mirror-storage/storage:/home/railgun/storage
-      # Users configuration
-      - ./users.conf:/etc/sftp/users.conf:ro
-      # Persistent SSH keys
-      - ./sftp-keys/sftp-keys:/etc/ssh:Z
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/rootfs:ro,rslave
+      - /home/admin/git/mirror.nekoha.moe/mirror-storage/storage:/host/beatmap-storage:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/host/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var/lib/containers/.+)($|/)'
+      - '--collector.filesystem.fs-types-exclude=^(tmpfs|devtmpfs|devfs|iso9660|overlay|aufs|squashfs|fuse\.lxcfs)$'
     ports:
-      - "2222:22"
+      - "9100:9100"
 
 networks:
   mirror-network:
