@@ -8,36 +8,27 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo -e "${BLUE}========================================"
-echo "  Mirror Infrastructure Setup"
+echo "  Mirror Install Check"
 echo "========================================${NC}"
 echo ""
 
 if [ "$EUID" -eq 0 ]; then 
     echo -e "${RED}Error: Do not run this script as root${NC}"
-    echo "Run as your normal user account."
+    echo "Run as your normal user."
     exit 1
 fi
 
-echo -e "${BLUE}[1/6] Installing dependencies${NC}"
+echo -e "${BLUE}[1/6] Checking dependencies${NC}"
 
 if ! command -v podman &> /dev/null; then
-    echo "Installing Podman..."
-    if [ -f /etc/fedora-release ]; then
-        sudo dnf install -y podman
-    elif [ -f /etc/debian_version ]; then
-        sudo apt update && sudo apt install -y podman
-    else
-        echo -e "${RED}Unsupported distro. Install Podman manually.${NC}"
-        exit 1
-    fi
+    echo -e "${RED}Podman not installed${NC}"
 else
     echo "Podman installed"
 fi
 
 if ! command -v podman-compose &> /dev/null; then
-    echo "Installing podman-compose..."
-    pip install --user podman-compose
-    export PATH="$HOME/.local/bin:$PATH"
+    echo -e "${RED}podman-compose not installed${NC}"
+    exit 1
 else
     echo "podman-compose installed"
 fi
