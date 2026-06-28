@@ -35,11 +35,11 @@ services:
       - osu-cookies:/app/src/cookies:Z
     networks:
       - mirror-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      cookie-fetcher:
-        condition: service_started
+    # depends_on:
+      # postgres:
+      #   condition: service_healthy
+      # cookie-fetcher:
+      #   condition: service_started
     security_opt:
       - label=disable
 
@@ -76,9 +76,9 @@ services:
       - mirror-network
     extra_hosts:
       - "host.containers.internal:host-gateway"
-    depends_on:
-      postgres:
-        condition: service_healthy
+    # depends_on:
+      # postgres:
+      #   condition: service_healthy
     security_opt:
       - label=disable
 
