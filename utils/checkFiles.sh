@@ -14,7 +14,9 @@ COUNTER_FILE=$(mktemp)
 echo 0 > "$COUNTER_FILE"
 
 # Get all IDs from the table
-ids=$(psql -U "$DB_USER" -h "$DB_HOST" -d "$DB_NAME" -t -c "SELECT id FROM beatmapset_metadata ORDER BY id;")
+ids=$(psql -U "$DB_USER" -h "$DB_HOST" -d "$DB_NAME" -t -c 
+    "SELECT id FROM beatmapset_metadata ORDER BY id;"
+)
 
 # Function to print live counter every second
 watch_counter() {
