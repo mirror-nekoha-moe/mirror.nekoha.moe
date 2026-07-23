@@ -3,7 +3,7 @@
 set -eo pipefail
 
 # Load DB credentials
-export $(grep -v '^#' "$(dirname "$0")/../.env.psql" | xargs)
+export $(grep -v '^#' "$(dirname "$0")/../.env" | xargs)
 
 BASE_PATH="/home/admin/git/mirror.nekoha.moe/beatmap-fetcher/storage"
 
@@ -34,7 +34,7 @@ print_progress() {
     echo -ne "Total: ${c:-0} OK: ${o:-0} Corrupt: ${co:-0} Missing: ${mi:-0}\r"
 }
 
-sql="SELECT id FROM beatmapset_metadata WHERE status IN ('graveyard') AND downloaded = true AND id > ${RESUME_AFTER} ORDER BY file_size;"
+sql="SELECT id FROM $TABLE_BEATMAPSET WHERE status IN ('graveyard') AND downloaded = true AND id > ${RESUME_AFTER} ORDER BY file_size;"
 
 echo "Fetch Query: $sql"
 ids=$(psql -U "$DB_USER" -h "$DB_HOST" -d "$DB_NAME" -t -A -c "$sql")

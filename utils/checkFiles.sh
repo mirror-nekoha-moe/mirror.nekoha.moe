@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load .env file (PSQL Credentials)
-export $(grep -v '^#' ../.env.psql | xargs)
+export $(grep -v '^#' ../.env | xargs)
 
 BASE_PATH="/home/admin/git/mirror.nekoha.moe/beatmap-fetcher/storage"
 
@@ -15,7 +15,7 @@ echo 0 > "$COUNTER_FILE"
 
 # Get all IDs from the table
 ids=$(psql -U "$DB_USER" -h "$DB_HOST" -d "$DB_NAME" -t -c 
-    "SELECT id FROM beatmapset_metadata ORDER BY id;"
+    "SELECT id FROM $TABLE_BEATMAPSET ORDER BY id;"
 )
 
 # Function to print live counter every second
@@ -60,4 +60,3 @@ done
 
 # Trigger final cleanup
 exit
-
