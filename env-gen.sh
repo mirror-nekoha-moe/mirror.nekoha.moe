@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Example .env generator
-sed 's/=.*/=/' .env.psql > .env.psql.example
+sed 's/=.*/=/' .env > .env.example
