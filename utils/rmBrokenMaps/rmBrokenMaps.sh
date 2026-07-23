@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-export $(grep -v '^#' "$(dirname "$0")/../.env" | xargs)
+export $(grep -v '^#' "$(dirname "$0")/../../.env" | xargs)
 
 export PGHOST="$DB_HOST"
 export PGDATABASE="$DB_NAME"
