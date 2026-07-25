@@ -72,6 +72,7 @@ services:
     volumes:
       - /run/user/${UID:-1000}/podman/podman.sock:/run/podman/podman.sock:ro
       - ./mirror-storage/storage:/app/storage:Z
+      - ./mirror-storage/audio-cache:/app/audio-cache:Z
     networks:
       - mirror-network
     extra_hosts:
