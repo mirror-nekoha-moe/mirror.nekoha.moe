@@ -69,6 +69,7 @@ services:
       - ./mirror-server/src/.env
     ports:
       - "30727:30727"
+      - "127.0.0.1:30728:30728"
     volumes:
       - /run/user/${UID:-1000}/podman/podman.sock:/run/podman/podman.sock:ro
       - ./mirror-storage/storage:/app/storage:Z
@@ -216,6 +217,36 @@ services:
       - '--collector.filesystem.fs-types-exclude=^(tmpfs|devtmpfs|devfs|iso9660|overlay|aufs|squashfs|fuse\.lxcfs)$'
     ports:
       - "9100:9100"
+
+  # Datadog Agent
+  dd-agent:
+    image: registry.datadoghq.com/agent:7
+    container_name: dd-agent
+    restart: always
+    network_mode: host
+    pid: host
+    env_file:
+      - ./monitoring/datadog/.env
+    environment:
+      - DD_SITE=datadoghq.eu
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_ENV=prod
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_APM_RECEIVER_SOCKET=/var/run/datadog/apm.socket
+      - DD_DOGSTATSD_SOCKET=/var/run/datadog/dsd.socket
+      - DD_CMD_PORT=5555
+    volumes:
+      - /var/run/datadog:/var/run/datadog
+      - /run/user/${UID:-1000}/podman/podman.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - ${HOME}/.local/share/containers/storage:/var/lib/docker/containers:ro
+      - ./monitoring/datadog/conf.d/postgres.d:/etc/datadog-agent/conf.d/postgres.d:ro
+      - ./monitoring/datadog/conf.d/openmetrics.d:/etc/datadog-agent/conf.d/openmetrics.d:ro
+      - ./monitoring/datadog/conf.d/redisdb.d:/etc/datadog-agent/conf.d/redisdb.d:ro
+    security_opt:
+      - label=disable
 
 networks:
   mirror-network:

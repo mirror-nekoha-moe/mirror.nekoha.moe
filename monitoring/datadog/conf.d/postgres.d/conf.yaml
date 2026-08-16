@@ -1,0 +1,43 @@
+# Datadog Postgres integration
+# https://docs.datadoghq.com/integrations/postgres/
+
+instances:
+  - dbm: true
+    host: "%%env_PG_HOSTNAME%%"
+    port: "%%env_PG_PORT%%"
+    username: "%%env_DD_PG_USERNAME%%"
+    password: "%%env_DD_PG_PASSWORD%%"
+    dbname: "%%env_PG_DATABASE%%"
+    tags:
+      - "service:mirror-database"
+      - "env:prod"
+    collect_schemas:
+      enabled: true
+    collect_activity_metrics: true
+
+    custom_queries:
+      - metric_prefix: mirror
+        query: SELECT count(*) FILTER (WHERE downloaded = true), count(*) FROM beatmapset_metadata
+        columns:
+          - name: beatmapset.downloaded_count
+            type: gauge
+          - name: beatmapset.total_count
+            type: gauge
+        tags:
+          - "service:mirror-database"
+
+      - metric_prefix: mirror
+        query: SELECT count(*) FROM beatmap_metadata
+        columns:
+          - name: beatmap.total_count
+            type: gauge
+        tags:
+          - "service:mirror-database"
+
+      - metric_prefix: mirror
+        query: SELECT count(*) FROM request_batch WHERE status = 'pending'
+        columns:
+          - name: request_batch.pending_count
+            type: gauge
+        tags:
+          - "service:mirror-database"

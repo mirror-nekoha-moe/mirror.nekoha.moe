@@ -1,0 +1,11 @@
+# Datadog Redis (redisdb) check for the `valkey` container.
+# https://docs.datadoghq.com/integrations/redisdb/
+
+init_config:
+
+instances:
+  - host: localhost
+    port: 6380
+    tags:
+      - "service:valkey"
+      - "env:prod"

@@ -1,5 +1,6 @@
 /sftp-keys
 /monitoring/grafana-datasources.yml
+/monitoring/datadog/.env
 /.env.*
 /.env*
 /users.*

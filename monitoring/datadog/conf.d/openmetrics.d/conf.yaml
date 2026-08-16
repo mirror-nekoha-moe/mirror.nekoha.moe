@@ -1,0 +1,35 @@
+# Datadog OpenMetrics/Prometheus check
+# https://docs.datadoghq.com/integrations/openmetrics/
+
+instances:
+  - openmetrics_endpoint: http://localhost:30728/metrics
+    namespace: mirror_server
+    metrics:
+      - ".*"
+    tags:
+      - "service:mirror-server"
+      - "env:prod"
+
+  - openmetrics_endpoint: http://localhost:9882/metrics
+    namespace: podman
+    metrics:
+      - ".*"
+    tags:
+      - "service:podman-exporter"
+      - "env:prod"
+
+  - openmetrics_endpoint: http://localhost:9187/metrics
+    namespace: postgres_exporter
+    metrics:
+      - ".*"
+    tags:
+      - "service:postgres-exporter"
+      - "env:prod"
+
+  - openmetrics_endpoint: http://localhost:9100/metrics
+    namespace: node
+    metrics:
+      - ".*"
+    tags:
+      - "service:node-exporter"
+      - "env:prod"
