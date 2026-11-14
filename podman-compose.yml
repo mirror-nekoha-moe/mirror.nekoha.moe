@@ -31,6 +31,7 @@ services:
       - ./beatmap-fetcher/src/.env.production
     volumes:
       - ./mirror-storage/storage:/app/storage:Z
+      - ./mirror-storage/archive:/app/archive:Z
       - osu-cookies:/app/src/cookies:Z
     networks:
       - mirror-network
@@ -73,6 +74,7 @@ services:
       - /run/user/${UID:-1000}/podman/podman.sock:/run/podman/podman.sock:ro
       - ./mirror-storage/storage:/app/storage:Z
       - ./mirror-storage/audio-cache:/app/audio-cache:Z
+      - ./mirror-storage/archive:/app/archive:Z
     networks:
       - mirror-network
     extra_hosts:
