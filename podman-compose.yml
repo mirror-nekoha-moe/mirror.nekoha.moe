@@ -85,6 +85,25 @@ services:
         security_opt:
             - label=disable
 
+    # Web Database Table Explorer
+    datasette:
+        build:
+            context: ./datasette
+            dockerfile: Dockerfile
+        container_name: datasette
+        restart: always
+        init: true
+        env_file:
+            - ./datasette/.env
+        ports:
+            - "127.0.0.1:32010:8001"
+        volumes:
+            - ./datasette/data:/data:Z
+        networks:
+            - mirror-network
+        security_opt:
+            - label=disable
+
     # Portainer
     portainer:
         image: docker.io/portainer/portainer-ce:latest
