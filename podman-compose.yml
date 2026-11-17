@@ -1,128 +1,128 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: docker.io/library/postgres:16-alpine
-    container_name: mirror-postgres
-    restart: always
-    env_file:
-      - ./mirror-database/.env
-    volumes:
-      - ./mirror-database/postgres_data:/var/lib/postgresql/data:Z
-    networks:
-      - mirror-network
-    ports:
-      - "127.0.0.1:5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PG_USERNAME} -d ${PG_DATABASE}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # PostgreSQL Database
+    postgres:
+        image: docker.io/library/postgres:16-alpine
+        container_name: mirror-postgres
+        restart: always
+        env_file:
+            - ./mirror-database/.env
+        volumes:
+            - ./mirror-database/postgres_data:/var/lib/postgresql/data:Z
+        networks:
+            - mirror-network
+        ports:
+            - "127.0.0.1:5432:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${PG_USERNAME} -d ${PG_DATABASE}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-  # Beatmap Fetcher Service
-  beatmap-fetcher:
-    build:
-      context: ./beatmap-fetcher
-      dockerfile: Dockerfile
-    container_name: beatmap-fetcher
-    restart: always
-    env_file:
-      - ./beatmap-fetcher/src/.env.production
-    volumes:
-      - ./mirror-storage/storage:/app/storage:Z
-      - ./mirror-storage/archive:/app/archive:Z
-      - osu-cookies:/app/src/cookies:Z
-    networks:
-      - mirror-network
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
-    #   cookie-fetcher:
-    #     condition: service_started
-    security_opt:
-      - label=disable
+    # Beatmap Fetcher Service
+    beatmap-fetcher:
+        build:
+            context: ./beatmap-fetcher
+            dockerfile: Dockerfile
+        container_name: beatmap-fetcher
+        restart: always
+        env_file:
+            - ./beatmap-fetcher/src/.env.production
+        volumes:
+            - ./mirror-storage/storage:/app/storage:Z
+            - ./mirror-storage/archive:/app/archive:Z
+            - osu-cookies:/app/src/cookies:Z
+        networks:
+            - mirror-network
+        # depends_on:
+        #   postgres:
+        #     condition: service_healthy
+        #   cookie-fetcher:
+        #     condition: service_started
+        security_opt:
+            - label=disable
 
-  # Cookie Fetcher Service
-  cookie-fetcher:
-    build:
-      context: ./cookie-fetcher
-      dockerfile: Dockerfile
-    container_name: cookie-fetcher
-    restart: always
-    volumes:
-      - osu-cookies:/app/cookies:Z
-      - ./cookie-fetcher/puppeteer_profile:/app/puppeteer_profile:Z
-    networks:
-      - mirror-network
-    security_opt:
-      - label=disable
+    # Cookie Fetcher Service
+    cookie-fetcher:
+        build:
+            context: ./cookie-fetcher
+            dockerfile: Dockerfile
+        container_name: cookie-fetcher
+        restart: always
+        volumes:
+            - osu-cookies:/app/cookies:Z
+            - ./cookie-fetcher/puppeteer_profile:/app/puppeteer_profile:Z
+        networks:
+            - mirror-network
+        security_opt:
+            - label=disable
 
-  # Mirror API Server
-  mirror-server:
-    build:
-      context: ./mirror-server
-      dockerfile: Dockerfile
-    container_name: mirror-server
-    restart: always
-    env_file:
-      - ./mirror-server/src/.env
-    ports:
-      - "30727:30727"
-      - "127.0.0.1:30728:30728"
-    volumes:
-      - /run/user/${UID:-1000}/podman/podman.sock:/run/podman/podman.sock:ro
-      - ./mirror-storage/storage:/app/storage:Z
-      - ./mirror-storage/audio-cache:/app/audio-cache:Z
-      - ./mirror-storage/archive:/app/archive:Z
-    networks:
-      - mirror-network
-    extra_hosts:
-      - "host.containers.internal:host-gateway"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
-    security_opt:
-      - label=disable
+    # Mirror API Server
+    mirror-server:
+        build:
+            context: ./mirror-server
+            dockerfile: Dockerfile
+        container_name: mirror-server
+        restart: always
+        env_file:
+            - ./mirror-server/src/.env
+        ports:
+            - "30727:30727"
+            - "127.0.0.1:30728:30728"
+        volumes:
+            - /run/user/${UID:-1000}/podman/podman.sock:/run/podman/podman.sock:ro
+            - ./mirror-storage/storage:/app/storage:Z
+            - ./mirror-storage/audio-cache:/app/audio-cache:Z
+            - ./mirror-storage/archive:/app/archive:Z
+        networks:
+            - mirror-network
+        extra_hosts:
+            - "host.containers.internal:host-gateway"
+        # depends_on:
+        #   postgres:
+        #     condition: service_healthy
+        security_opt:
+            - label=disable
 
-  # Portainer
-  portainer:
-    image: docker.io/portainer/portainer-ce:latest
-    container_name: portainer
-    restart: always
-    ports:
-      - "9443:9443"
-      - "9000:9000"
-    volumes:
-      - /run/user/${UID:-1000}/podman/podman.sock:/var/run/docker.sock:ro
-      - portainer_data:/data
-    networks:
-      - mirror-network
+    # Portainer
+    portainer:
+        image: docker.io/portainer/portainer-ce:latest
+        container_name: portainer
+        restart: always
+        ports:
+            - "9443:9443"
+            - "9000:9000"
+        volumes:
+            - /run/user/${UID:-1000}/podman/podman.sock:/var/run/docker.sock:ro
+            - portainer_data:/data
+        networks:
+            - mirror-network
 
-  # valkey
-  valkey:
-    image: docker.io/valkey/valkey:9.0
-    container_name: valkey
-    restart: always
-    networks:
-      - mirror-network
-    ports:
-      - "127.0.0.1:6380:6379"
-    volumes:
-      - valkey_data:/data
-    healthcheck:
-      test: ["CMD", "valkey-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # valkey
+    valkey:
+        image: docker.io/valkey/valkey:9.0
+        container_name: valkey
+        restart: always
+        networks:
+            - mirror-network
+        ports:
+            - "127.0.0.1:6380:6379"
+        volumes:
+            - valkey_data:/data
+        healthcheck:
+            test: ["CMD", "valkey-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
 networks:
-  mirror-network:
-    external: true
+    mirror-network:
+        external: true
 
 volumes:
-  osu-cookies:
-    external: true
-  portainer_data:
-    external: true
-  valkey_data:
+    osu-cookies:
+        external: true
+    portainer_data:
+        external: true
+    valkey_data:
