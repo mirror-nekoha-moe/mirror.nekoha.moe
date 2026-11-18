@@ -86,23 +86,51 @@ services:
             - label=disable
 
     # Web Database Table Explorer
-    datasette:
-        build:
-            context: ./datasette
-            dockerfile: Dockerfile
-        container_name: datasette
+    nocodb:
+        image: docker.io/nocodb/nocodb:2026.10.1
+        container_name: nocodb
+        restart: always
+        environment:
+            NC_DISABLE_TELE: "true"
+            NC_ALLOW_LOCAL_EXTERNAL_DBS: "true"
+            NC_PUBLIC_URL: "https://db.mirror.nekoha.moe"
+            NC_DISABLE_ERR_REPORTS: "true"
+            NC_CONNECT_TO_EXTERNAL_DB_DISABLED: "true"
+        ports:
+            - "127.0.0.1:32010:8080"
+        volumes:
+            - ./nocodb/data:/usr/app/data:Z
+        networks:
+            - nocodb-network
+
+    # Copy of the public tables for NocoDB
+    nocodb-postgres:
+        image: docker.io/library/postgres:16-alpine
+        container_name: nocodb-postgres
+        restart: always
+        env_file:
+            - ./nocodb/.env
+        volumes:
+            - ./nocodb/postgres_data:/var/lib/postgresql/data:Z
+            - ./nocodb/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+            - ./nocodb/setup.sql:/setup.sql:ro
+        networks:
+            - nocodb-network
+
+    # Daily dump from mirror-postgres into nocodb-postgres
+    nocodb-sync:
+        image: docker.io/library/postgres:16-alpine
+        container_name: nocodb-sync
         restart: always
         init: true
+        entrypoint: ["bash", "/impexp.sh"]
         env_file:
-            - ./datasette/.env
-        ports:
-            - "127.0.0.1:32010:8001"
+            - ./nocodb/.env
         volumes:
-            - ./datasette/data:/data:Z
+            - ./nocodb/impexp.sh:/impexp.sh:ro
         networks:
             - mirror-network
-        security_opt:
-            - label=disable
+            - nocodb-network
 
     # Portainer
     portainer:
@@ -138,6 +166,7 @@ services:
 networks:
     mirror-network:
         external: true
+    nocodb-network:
 
 volumes:
     osu-cookies:
