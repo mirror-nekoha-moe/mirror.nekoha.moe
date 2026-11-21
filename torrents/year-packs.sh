@@ -18,7 +18,7 @@ mkdir -p ${YEAR_TEMP}
 cd ${YEAR_TEMP}
 
 echo "Downloading ${YEAR} month packs"
-cp ${YEAR_DIR}/*/*.zip .
+rsync --progress ${YEAR_DIR}/*/*.zip .
 
 # We are inside $YEAR_TEMP
 for month_zip in $(ls); do
@@ -37,7 +37,7 @@ for name in $(ls); do
     mktorrent -o ${name}.torrent ${name}.zip
 
     echo "Uploading ${name}"
-    cp ${name}.zip ${name}.torrent ${YEAR_DIR}
+    rsync --progress ${name}.zip ${name}.torrent ${YEAR_DIR}
 done
 
 cd ${SCRIPT_DIR}
