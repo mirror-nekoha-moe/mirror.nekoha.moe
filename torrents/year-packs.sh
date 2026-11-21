@@ -10,6 +10,12 @@ SCRIPT_DIR=$(cd $(dirname ${0}) && pwd)
 YEAR_DIR=${SCRIPT_DIR}/../mirror-storage/archive/${YEAR}
 TEMP_DIR=${SCRIPT_DIR}/temp
 YEAR_TEMP=${TEMP_DIR}/${YEAR}
+TRACKERS="
+    -a http://mirror.nekoha.moe:32030/announce
+    -a udp://tracker.opentrackr.org:1337/announce
+    -a udp://open.stealth.si:80/announce
+    -a udp://tracker.torrent.eu.org:451/announce
+"
 
 # Remove temp files
 rm -rf ${TEMP_DIR}/*
@@ -34,7 +40,7 @@ done
 for name in $(ls); do
     echo "Building ${name}.zip"
     zip -0 -r ${name}.zip ${name}
-    mktorrent -l 22 -c"osu! beatmap pack ${name} by mirror.nekoha.moe" -o ${name}.torrent ${name}.zip
+    mktorrent -l 22 ${TRACKERS} -c"osu! beatmap pack ${name} by mirror.nekoha.moe" -o ${name}.torrent ${name}.zip
 
     echo "Uploading ${name}"
     rsync --progress ${name}.zip ${name}.torrent ${YEAR_DIR}/
