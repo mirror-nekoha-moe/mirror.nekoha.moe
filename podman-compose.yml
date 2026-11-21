@@ -163,6 +163,26 @@ services:
             timeout: 5s
             retries: 5
 
+    qbittorrent:
+        container_name: qbittorrent
+        image: ghcr.io/hotio/qbittorrent
+        restart: unless-stopped
+        ports:
+            - "127.0.0.1:32020:8080"
+            - "6881:6881/tcp"
+            - "6881:6881/udp"
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - UMASK=002
+            - TZ=Europe/Berlin
+            - WEBUI_PORTS=8080/tcp
+        volumes:
+            - ./torrents/config:/config
+            - ./mirror-storage/archive:/archive:ro
+        security_opt:
+            - label=disable
+
 networks:
     mirror-network:
         external: true
