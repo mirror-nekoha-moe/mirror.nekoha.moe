@@ -34,10 +34,10 @@ done
 for name in $(ls); do
     echo "Building ${name}.zip"
     zip -0 -r ${name}.zip ${name}
-    mktorrent -o ${name}.torrent ${name}.zip
+    mktorrent -l 22 -c"osu! beatmap pack ${name} by mirror.nekoha.moe" -o ${name}.torrent ${name}.zip
 
     echo "Uploading ${name}"
-    rsync --progress ${name}.zip ${name}.torrent ${YEAR_DIR}
+    rsync --progress ${name}.zip ${name}.torrent ${YEAR_DIR}/
 done
 
 cd ${SCRIPT_DIR}
