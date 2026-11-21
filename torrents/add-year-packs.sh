@@ -13,5 +13,5 @@ SESSION=$(curl -s -i --data-urlencode username=${QBIT_USERNAME} --data-urlencode
 for torrent in ${ARCHIVE_DIR}/*/*.torrent; do
     year=$(basename $(dirname ${torrent}))
     echo "Adding ${torrent}"
-    curl -b ${SESSION} -F torrents=@${torrent} -F savepath=/archive/${year} ${QBIT_URL}/api/v2/torrents/add
+    curl -b ${SESSION} -F torrents=@${torrent} -F savepath=/archive/${year} -F skip_checking=true ${QBIT_URL}/api/v2/torrents/add
 done
